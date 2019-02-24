@@ -1,6 +1,9 @@
 great resource for getting the cities, populations, and coordinates:
 https://en.wikipedia.org/wiki/List_of_United_States_cities_by_population
 
+top 1000 (as of 2013) in CSV format (good for importing to neo4j)
+https://gist.githubusercontent.com/deepeeess/ec9382c61842caa79bb4ad43036efc4b/raw/24af74a1e0ba1a717f31a1dab1e09989c9036859/gistfile1.txt
+
 top few:
 New York - 8,622,698 - 40.6635N 73.9386W
 Los Angeles - 3,999,759 - 34.0194N 118.4108W
@@ -8,3 +11,13 @@ Chicago - 2,716,450 - 41.8376N 87.6818W
 
 queries to create them:
 
+
+CALL spatial.addPointLayer('geom')
+
+USING PERIODIC COMMIT 50
+LOAD CSV WITH HEADERS FROM "https://gist.githubusercontent.com/deepeeess/ec9382c61842caa79bb4ad43036efc4b/raw/24af74a1e0ba1a717f31a1dab1e09989c9036859/gistfile1.txt" AS row
+CREATE (:City {name: row.city,
+state: row.state,
+population: row.population,
+latitude: row.latitude,
+longitude: row.longitude})

@@ -1,0 +1,32 @@
+neo4j creds: neo4j/neo4jneo4j @ bolt://127.0.0.1:7687
+browser: http://localhost:7474/browser/
+
+This kind of shows how to use layers and find distances:
+https://stackoverflow.com/questions/17966722/neo4j-spatial-withindistance-cypher-query-returns-empty-while-rest-call-return
+
+fantastic way to import cities and locations -
+https://www.graphstory.com/blog/2017/09/making-location-analysis-easier-with-graph-databases
+
+getting set difference -
+https://stackoverflow.com/questions/28894098/neo4j-difference-between-two-sets-in-return-statement
+
+Setup notes
+- Needed to convert all lat/longs to float
+- needed to convert populations to integer (should just do this on import)
+
+Create distances to SF, similar query for reverse direction
+```
+MATCH (c1:City), (c2:City)
+WHERE c1.name = 'San Francisco' AND c2.name <> 'San Francisco'
+CREATE (c2)-[r:MILES_TO]->(c1)
+```
+
+This may have done it for all cities? Took 6 seconds
+```
+MATCH (c1:City), (c2:City)
+WHERE c1.name <> c2.name
+CREATE (c2)-[r:DISTANCE_TO]->(c1)
+```
+
+Starting to have trouble getting a single query to create all of the relationships...
+Should probably just do this in python
